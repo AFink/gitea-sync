@@ -14,6 +14,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 gitea_url = os.getenv("GITEA_URL")
 gitea_token = os.getenv("GITEA_TOKEN")
+gitea_uid = os.getenv("GITEA_UID")
 github_username = os.getenv("GITHUB_USERNAME")
 github_token = os.getenv("GITHUB_TOKEN")
 
@@ -35,7 +36,8 @@ def mirror_repos():
         # Get user details from Gitea
         r = session.get(f"{gitea_url}/user")
         r.raise_for_status()
-        gitea_uid = r.json()["id"]
+        if not gitea_uid:
+            gitea_uid = r.json()["id"]
     except requests.RequestException as e:
         logging.error(f"Error fetching Gitea user details: {e}")
         sys.exit(1)
