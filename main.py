@@ -33,6 +33,11 @@ def mirror_repos():
     })
 
     global gitea_uid
+    if gitea_uid:
+        gitea_uid = int(gitea_uid)
+        if gitea_uid <= 0:
+            gitea_uid = None
+    
     if not gitea_uid:
         try:
             # Get user details from Gitea
