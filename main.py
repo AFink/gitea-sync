@@ -32,15 +32,16 @@ def mirror_repos():
         "Authorization": f"token {gitea_token}",
     })
 
-    try:
-        # Get user details from Gitea
-        r = session.get(f"{gitea_url}/user")
-        r.raise_for_status()
-        if not gitea_uid:
+    global gitea_uid
+    if not gitea_uid:
+        try:
+            # Get user details from Gitea
+            r = session.get(f"{gitea_url}/user")
+            r.raise_for_status()
             gitea_uid = r.json()["id"]
-    except requests.RequestException as e:
-        logging.error(f"Error fetching Gitea user details: {e}")
-        sys.exit(1)
+        except requests.RequestException as e:
+            logging.error(f"Error fetching Gitea user details: {e}")
+            sys.exit(1)
 
     # Github API setup
     gh = Github(github_token)
